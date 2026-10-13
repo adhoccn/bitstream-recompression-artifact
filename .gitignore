@@ -1,0 +1,56 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---- LaTeX ----
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.spl
+_build/
+
+# ---- 备份与中间产物（本项目的 _bak_ / _regen_ 约定）----
+*.bak
+*.bak_*
+_archive_*/
+_regen_*
+_also_*
+
+# ---- 数据：原始视频不入库，特征表入库 ----
+data/
+data_controlled/
+data_bbc/
+data_expanded/
+results/
+!experiment/bitstream_features_controlled.csv
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# ---- Word / Office 临时文件 ----
+~$*.docx
+*.tmp
+
+# ---- 系统与编辑器 ----
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# ---- 本机路径产物 ----
+*.log
