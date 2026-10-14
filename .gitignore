@@ -23,14 +23,14 @@ env/
 *.spl
 _build/
 
-# ---- 备份与中间产物（本项目的 _bak_ / _regen_ 约定）----
+# ---- backups and intermediates ----
 *.bak
 *.bak_*
 _archive_*/
 _regen_*
 _also_*
 
-# ---- 数据：原始视频不入库，特征表入库 ----
+# ---- data: raw video stays out, the feature table is in ----
 data/
 data_controlled/
 data_bbc/
@@ -42,19 +42,19 @@ results/
 *.avi
 *.mkv
 
-# ---- Word / Office 临时文件 ----
+# ---- office temp files ----
 ~$*.docx
 *.tmp
 
-# ---- 系统与编辑器 ----
+# ---- OS and editors ----
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
 
-# ---- 本机路径产物 ----
+# ---- local artifacts ----
 *.log
 
-# ---- 自测与副产物 ----
+# ---- self-test and side products ----
 _selftest*
 _also_*
