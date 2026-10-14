@@ -1,0 +1,20 @@
+# Paper B 复现环境依赖
+# 2026-10-12 实测于 Windows / Python 3.13.12，全部流水线与三张图均跑通。
+#
+# 安装：  pip install -r requirements.txt
+#
+# ⚠ 另需 **ffmpeg**（非 Python 包，必须单独装）：
+#    缺 ffmpeg 时特征提取会静默失败，症状看着像"素材坏了"而不是"缺依赖"。
+#
+# ⚠ matplotlib 版本会影响图的**字节**（字体度量不同）。
+#    要逐位复现 figures/ 里的图，请严格用 3.10.9；
+#    换版本不会改变任何数字，只影响图的像素与文件大小。
+
+av==18.0.0            # PyAV：读码流包大小、帧类型、GOP 结构
+numpy==2.4.6
+pandas==3.0.3
+scipy==1.17.1
+scikit-learn==1.9.0   # 逻辑回归基线 + CV 封装
+xgboost==3.2.0        # 主分类器；改版本会轻微改变 AUC 小数位
+matplotlib==3.10.9    # 影响出图字节，见上方警告
+seaborn==0.13.2       # 配色与绘图样式

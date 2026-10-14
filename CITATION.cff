@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Blind Video Recompression Detection via Bitstream-Level Encoding-Layer Features: A Controlled Protocol and a Negative Result"
+abstract: >-
+  Artifact for a negative-result study of blind video recompression detection.
+  The repository contains a controlled two-arm protocol (single = compress once
+  at rate factor q1; double = recompress around q1 with the same codec) that
+  removes codec-identity leakage, bitstream-level feature extraction (39
+  statistics, no pixel decoding, no GPU), and the evaluation scripts that show
+  the bitstream features do not outperform the pixel-domain baseline under
+  that protocol.
+authors:
+  - family-names: "Dong"
+    given-names: "Huasong"
+    affiliation: "School of Artificial Intelligence, China University of Petroleum (Beijing), Beijing, China"
+    email: "ogreishydhs@cup.edu.cn"
+    orcid: "https://orcid.org/0009-0006-9870-3864"
+version: 1.0.0
+date-released: "2026-10-11"
+license: MIT
+repository-code: "<填仓库地址，例如 https://github.com/<user>/<repo>>"
+keywords:
+  - video forensics
+  - blind recompression detection
+  - bitstream analysis
+  - evaluation protocol
+  - cross-validation leakage
+  - negative result
+  - reproducibility
+# 论文见刊后回填：
+# doi: 10.1109/ACCESS.2026.XXXXXXX
+# 归档（IEEE DataPort / Zenodo）后回填：
+# identifiers:
+#   - type: doi
+#     value: "10.XXXX/zenodo.XXXXXXX"
+#     description: "Archived artifact (code + feature table)"
