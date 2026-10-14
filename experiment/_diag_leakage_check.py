@@ -1,10 +1,5 @@
 #!/usr/env python3
 # -*- coding: utf-8 -*-
-"""Diagnostic: is the 0.41 random-CV number real or a bug?
-1) source-aware XGB  -> expect ~0.665 (sanity: data/features OK)
-2) random-CV XGB    -> expect ~0.41 (the surprising result)
-3) random-CV XGB with PERMUTED labels -> expect ~0.50 (metric sanity)
-"""
 import os, sys
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -40,3 +35,6 @@ print(f"     AUC = {np.mean(vals):.4f} +/- {1.96*np.std(vals)/np.sqrt(len(vals))
 print("\n[3] RANDOM-CV XGB with PERMUTED labels (expect ~0.50):")
 vals_p = [random_cv_auc(Xs, y, s, permute=True) for s in range(10)]
 print(f"     AUC = {np.mean(vals_p):.4f} +/- {1.96*np.std(vals_p)/np.sqrt(len(vals_p)):.4f}")
+
+"""Diagnostic: compare source-aware CV against random CV."""
+

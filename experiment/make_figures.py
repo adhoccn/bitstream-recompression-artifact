@@ -1,25 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Generate the two figures requested by the peer review (Top-3, item: figures):
-
-  figs/fig_scores.png     Score-distribution histogram (single vs double) under
-                           source-aware CV. Explains why TDR@FPR=0.05
-                           reaches 0.853 even though AUC is only 0.665:
-                           the double class carries a visibly right-skewed score
-                           distribution, so a low-FPR threshold still captures
-                           most positives.
-
-  figs/fig_importance.png  Feature-importance bar chart (two panels):
-                           left  = XGBoost gain (top-10),
-                           right = Logistic-Regression |standardized coef| (top-10).
-                           Supports the rewritten L211: pkt_size_* / pts_delta_std
-                           dominate XGB; n_packets / i_ratio / frame_type_entropy
-                           are near-zero in the tree model.
-
-Usage:
-  python make_figures.py
-"""
 import os
 import sys
 import numpy as np
@@ -147,3 +127,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+"""Generate the two summary figures from a feature table."""
+

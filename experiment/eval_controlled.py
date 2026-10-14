@@ -1,40 +1,5 @@
 #!/usr/env python3
 # -*- coding: utf-8 -*-
-"""
-受控双臂评估脚本 (controlled two-arm evaluation)
-================================================
-
-统一输出（一次运行拿到全部审稿人会问的指标）：
-
-  1) Source-aware 分层 K 折 CV
-     - 按【原始视频 source】分组（StratifiedGroupKFold），同一源的视频
-       永不跨训练/测试集，杜绝内容泄漏。
-     - 指标: AUC, EER(等错率), TDR@FPR=0.01, TDR@FPR=0.05
-     - 多个随机种子重复 -> 报告 mean ± 95% CI
-       （CI 取法: 把每次 fold 估计当作独立样本,
-        CI = mean ± 1.96·std / sqrt(N_fold_estimates)）
-
-  2) 同码器双臂跨码器泛化 (cross-codec)
-     - train 在码器 A 的 single+double, test 在码器 B 的 single+double
-       （两臂都在目标码器内, 无 codec-ID 泄漏）
-     - 输出 train→test 矩阵: 对角线=同码器(source-aware),
-       非对角线=跨码器（看双量化指纹是否码器无关）
-
-  3) 码率混淆消融 (full vs 去 bit_rate/actual_bitrate/bits_per_pixel)
-     - 把"码率泄漏"质疑直接转成卖点
-
-特征: 自动识别数值列, 排除元数据/标签列。
-约定（与 prepare_samples.py 的新 index 对齐）:
-  single = compress(src,q1) [label='single']
-  double = compress(single,q2) [label='double']
-  codec 列取值 h264/h265/vp9（两臂同码器）
-
-用法:
-  py eval_controlled.py --features results/bitstream_features_controlled.csv
-  py eval_controlled.py --features ... --model xgb
-  py eval_controlled.py --features ... --max-delta 3     # 仅近参数(double delta<=3)
-  py eval_controlled.py --self-test                          # 合成数据自测
-"""
 
 import os
 import sys
@@ -51,12 +16,11 @@ try:
 except ImportError:
     HAVE_SK = False
 
-# 排除的元数据/标签列
+# metadata and label columns
 EXCLUDE = {'video_file', 'label', 'codec', 'q1', 'q2', 'delta_qp',
            'sample_path', 'src_path', 'group_id', 'error',
-           # 恒定/元数据数值列：不携带单压vs双压信号，剔除以匹配论文"39-D"口径
            'crf', 'level', 'height', 'width', 'duration_s', 'n_frames_decoded'}
-# 码率类混淆特征（消融时剔除）
+# rate features, dropped in the ablation
 RATE_FEATURES = {'bit_rate', 'actual_bitrate', 'bits_per_pixel'}
 
 SEEDS = 10
@@ -65,11 +29,11 @@ Z = 1.96  # 95% CI
 
 
 # ───────────────────────────────────────────────────────────
-# 数据加载
+# data loading
 # ───────────────────────────────────────────────────────────
 def load_data(features_csv, max_delta=None):
     rows = list(csv.DictReader(open(features_csv, 'r', encoding='utf-8')))
-    # 识别数值特征列
+    # numeric feature columns
     feat_cols = []
     for k in rows[0].keys():
         if k in EXCLUDE:
@@ -87,7 +51,7 @@ def load_data(features_csv, max_delta=None):
             continue
         delta = float(r.get('delta_qp', 0) or 0)
         if lab == 'double' and max_delta is not None and delta > max_delta:
-            continue  # 近参数子集：只保留 delta 足够小的 double
+            continue  # near-parameter subset: keep only small-delta double rows
         vals = []
         for fn in feat_cols:
             try:
@@ -121,7 +85,7 @@ def make_model(model):
             from xgboost import XGBClassifier
             return 'xgb'
         except ImportError:
-            print("  [warn] xgboost 不可用, 回退 LR")
+            print("  [warn] xgboost unavailable, falling back to LR")
             return 'lr'
     return 'lr'
 
@@ -137,7 +101,7 @@ def fit_predict(Xtr, ytr, Xte, model):
         Xtr2 = sc.transform(Xtr)
         m = LogisticRegression(max_iter=1000, C=1.0, random_state=42)
         m.fit(Xtr2, ytr)
-    # 概率打分（LR 用 positive class; XGB 用 [:,1]）
+    # scores (LR: positive class; XGB: [:,1])
     if model == 'xgb':
         return m.predict_proba(Xte)[:, 1]
     sc = StandardScaler().fit(Xtr)
@@ -145,10 +109,10 @@ def fit_predict(Xtr, ytr, Xte, model):
 
 
 # ───────────────────────────────────────────────────────────
-# 取证指标
+# metrics
 # ───────────────────────────────────────────────────────────
 def eer(y_true, y_score):
-    """等错率: FPR==FN R 处（插值的近似）。"""
+    """Equal error rate: FPR == FNR (interpolated)."""
     if len(np.unique(y_true)) < 2:
         return float('nan')
     fpr, tpr, _ = roc_curve(y_true, y_score)
@@ -158,7 +122,7 @@ def eer(y_true, y_score):
 
 
 def tdr_at_fpr(y_tr, s_tr, y_te, s_te, target_fpr):
-    """在【训练集】上选 FPR<=target 且 TPR 最大的阈值, 在【测试集】上报 TDR。"""
+    """On the training set pick the threshold with FPR<=target and max TPR, report TDR on the test set."""
     if len(np.unique(y_tr)) < 2 or len(np.unique(y_te)) < 2:
         return float('nan')
     fpr, tpr, thr = roc_curve(y_tr, s_tr)
@@ -196,7 +160,7 @@ def source_aware_cv(X, y, src, feat_cols, model='lr', ablate=False):
             if len(np.unique(y[tr])) < 2 or len(np.unique(y[te])) < 2:
                 continue
             prob = fit_predict(Xs[tr], y[tr], Xs[te], model)
-            # 训练集上的打分(用于选阈值)
+            # train scores, used to pick a threshold
             prob_tr = fit_predict(Xs[tr], y[tr], Xs[tr], model)
             aucs.append(roc_auc_score(y[te], prob))
             eers.append(eer(y[te], prob))
@@ -213,13 +177,13 @@ def source_aware_cv(X, y, src, feat_cols, model='lr', ablate=False):
 
 
 # ───────────────────────────────────────────────────────────
-# 2) 同码器双臂跨码器
+# 2) cross-codec
 # ───────────────────────────────────────────────────────────
 def cross_codec(X, y, codec_arr, src, feat_cols, model='lr', ablate=False):
     Xs, fcols = select_features(X, feat_cols, ablate)
     codecs = sorted(set(codec_arr))
-    print(f"\n  [CROSS-CODEC] train 在码器 A 的 single+double, "
-          f"test 在码器 B (seed={42})")
+    print(f"\n  [CROSS-CODEC] train on single+double of codec A, "
+          f"test on codec B (seed={42})")
     print(f"  {'train\\\\test':>12s} | " + " | ".join(f"{c:>10s}" for c in codecs))
     print("  " + "-" * (14 + 14 * len(codecs)))
     for tr_c in codecs:
@@ -230,7 +194,7 @@ def cross_codec(X, y, codec_arr, src, feat_cols, model='lr', ablate=False):
             if m_tr.sum() == 0 or m_te.sum() == 0:
                 row.append(f"{'n/a':>10s}")
                 continue
-            # 训练/测试各自内部 source-aware 5-fold 取均值, 避免内容泄漏
+            # source-aware 5-fold inside each split, no content leakage
             aucs = []
             sgkf = StratifiedGroupKFold(n_splits=N_FOLDS, shuffle=True,
                                         random_state=42)
@@ -241,24 +205,24 @@ def cross_codec(X, y, codec_arr, src, feat_cols, model='lr', ablate=False):
                     continue
                 aucs.append(roc_auc_score(y[m_tr][te2], prob))
             if te_c == tr_c:
-                # 同码器: 直接在该码器内 source-aware CV
+                # same codec: source-aware CV inside that codec
                 val = ci_str(aucs) if aucs else 'n/a'
             else:
-                # 跨码器: 用 A 全量训练, 在 B 全量测试
+                # cross codec: train on all of A, test on all of B
                 prob = fit_predict(Xs[m_tr], y[m_tr], Xs[m_te], model)
                 val = (f"{roc_auc_score(y[m_te], prob):.4f}"
                        if len(np.unique(y[m_te])) > 1 else 'n/a')
             row.append(f"{val:>10s}")
         print("  " + " | ".join(row))
-    print("  (对角线=同码器 source-aware CV; 非对角线=跨码器 AUC)")
+    print("  (diagonal = same-codec source-aware CV; off-diagonal = cross-codec AUC)")
 
 
 # ───────────────────────────────────────────────────────────
-# 自测：合成数据验证代码路径
+# self-test on synthetic data
 # ───────────────────────────────────────────────────────────
 def self_test():
     print("=" * 70)
-    print("SELF-TEST: 生成合成受控双臂数据并跑通全部指标")
+    print("SELF-TEST: synthetic data, all metrics")
     print("=" * 70)
     rng = np.random.RandomState(0)
     feat_pool = ['pkt_size_mean', 'gop_mean', 'i_ratio', 'bits_per_pixel',
@@ -270,7 +234,7 @@ def self_test():
     for src in sources:
         for codec in codecs:
             q1 = 28
-            # single：基础分布
+            # single: base distribution
             base = rng.randn(len(feat_pool)) * 0.3
             single_feats = base + np.array([1.0, 1.0, 0.3, 0.5, 0.5, 1.0, 0.4, 0.2, 0.5])
             rec = {'video_file': src, 'label': 'single', 'codec': codec,
@@ -278,7 +242,7 @@ def self_test():
             for fn, v in zip(feat_pool, single_feats):
                 rec[fn] = f"{v:.4f}"
             rows.append(rec)
-            # double：二次压缩留下微弱但一致的偏移
+            # double: small consistent shift
             for off in [-3, 0, 6]:
                 d = base + np.array([1.25, 0.8, 0.45, 0.7, 0.72, 1.2,
                                      0.5, 0.35, 0.62]) + rng.randn(len(feat_pool)) * 0.15
@@ -295,26 +259,26 @@ def self_test():
                                        'q2', 'delta_qp'] + feat_pool)
         w.writeheader()
         w.writerows(rows)
-    print(f"  合成样本: {len(rows)} 行, 码器={codecs}, 源={len(sources)}")
+    print(f"  synthetic rows: {len(rows)}, codecs={codecs}, sources={len(sources)}")
     run(tmp, model='lr', max_delta=None)
-    print(f"\n  [ok] 自测通过, 临时文件: {tmp}")
+    print(f"\n  [ok] self-test passed, temp file: {tmp}")
 
 
 # ───────────────────────────────────────────────────────────
-# 主流程
+# main
 # ───────────────────────────────────────────────────────────
 def run(features_csv, model='lr', max_delta=None):
     print("=" * 70)
-    print("受控双臂评估 (controlled two-arm evaluation)")
+    print("Controlled two-arm evaluation")
     print("=" * 70)
     X, y, feat_cols, codec_arr, src_arr, delta_arr = load_data(
         features_csv, max_delta=max_delta)
-    print(f"样本: {X.shape[0]} (single={int((y == 0).sum())}, "
+    print(f"samples: {X.shape[0]} (single={int((y == 0).sum())}, "
           f"double={int((y == 1).sum())})")
-    print(f"特征: {len(feat_cols)} | 码器: {sorted(str(c) for c in set(codec_arr))} | "
-          f"源: {len(set(src_arr))}")
+    print(f"features: {len(feat_cols)} | codecs: {sorted(str(c) for c in set(codec_arr))} | "
+          f"sources: {len(set(src_arr))}")
     if max_delta is not None:
-        print(f"近参数子集: 仅保留 double 的 delta_qp <= {max_delta}")
+        print(f"near-parameter subset: double rows with delta_qp <= {max_delta}")
     mdl = make_model(model)
 
     print("\n" + "-" * 70)
@@ -324,43 +288,46 @@ def run(features_csv, model='lr', max_delta=None):
     r_norate = source_aware_cv(X, y, src_arr, feat_cols, model=mdl, ablate=True)
 
     print("\n" + "-" * 70)
-    print("2) 跨码器泛化 (同码器双臂)")
+    print("2) CROSS-CODEC GENERALIZATION")
     print("-" * 70)
     cross_codec(X, y, codec_arr, src_arr, feat_cols, model=mdl, ablate=False)
 
     print("\n" + "-" * 70)
-    print("3) 码率混淆消融对比")
+    print("3) RATE-CONFOUND ABLATION")
     print("-" * 70)
     print(f"  FULL    : AUC={r_full['auc']}  EER={r_full['eer']}  "
           f"TDR@.01={r_full['tdr01']}  TDR@.05={r_full['tdr05']}")
     print(f"  NO-RATE: AUC={r_norate['auc']}  EER={r_norate['eer']}  "
           f"TDR@.01={r_norate['tdr01']}  TDR@.05={r_norate['tdr05']}")
-    print("\n  (若 NO-RATE 与 FULL 接近 -> 信号来自编码层结构而非码率)")
+    
 
 
 def main():
     if not HAVE_SK:
-        print("缺少 scikit-learn, 请先安装: pip install scikit-learn")
+        print("scikit-learn missing: pip install scikit-learn")
         sys.exit(1)
     ap = argparse.ArgumentParser()
     ap.add_argument('--features', type=str, default=None,
-                    help='受控双臂特征 CSV 路径')
+                    help='path to the feature CSV')
     ap.add_argument('--model', type=str, default='xgb',
                     choices=['lr', 'xgb', 'both'])
     ap.add_argument('--max-delta', type=float, default=None,
-                    help='近参数子集: 仅保留 double delta_qp <= 此值')
+                    help='near-parameter subset: keep double rows with delta_qp <= this')
     ap.add_argument('--self-test', action='store_true',
-                    help='生成合成数据并跑通全部指标')
+                    help='run all metrics on synthetic data')
     args = ap.parse_args()
 
     if args.self_test:
         self_test()
         return
     if not args.features:
-        print("请指定 --features <csv> 或加 --self-test")
+        print("pass --features <csv> or --self-test")
         sys.exit(1)
     run(args.features, model=args.model, max_delta=args.max_delta)
 
 
 if __name__ == '__main__':
     main()
+
+"""Evaluate a feature table: source-aware grouped CV, cross-codec matrix, rate-confound ablation."""
+

@@ -1,25 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Bitstream feature extraction for the EXPANDED blind detection dataset.
-
-读取: 由 --index 指定 (默认 data_controlled/sample_index.csv)
-写出: 由 --output 指定 (默认 results/bitstream_features_controlled.csv)
-  注: 默认路径相对本脚本位置解析 (../data_controlled, ../results),
-  故在任意机器上从项目根目录直接 `py scripts/extract_bitstream_expanded.py`
-  即可一键运行, 无需改路径。
-
-为配合 prepare_samples.py 的【受控双臂】新 index，新增 --index / --output /
---max 参数：脚本会把 index 里的 meta 列 (video_file, label, codec, q1, q2,
-delta_qp, crf, sample_path) 原样透传进特征表，供 eval_controlled.py 使用。
-
-两步工作流 (受控双臂):
-  py prepare_samples.py --max 20
-  py extract_bitstream_expanded.py \
-        --index data_controlled/sample_index.csv \
-        --output results/bitstream_features_controlled.csv
-  py eval_controlled.py --features results/bitstream_features_controlled.csv
-"""
 
 import av
 import os
@@ -30,8 +10,8 @@ import numpy as np
 from collections import defaultdict, Counter
 import time
 
-# 路径相对本脚本位置解析 (scripts/ -> 项目根 blind_detection/),
-# 换机器无需改路径, 从项目根目录直接运行即可。
+# paths resolve relative to this script,
+# so it runs from the repo root on any machine.
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 BLIND_DIR = os.path.dirname(SCRIPT_DIR)
 DEFAULT_INDEX = os.path.join(BLIND_DIR, 'data_controlled', 'sample_index.csv')
@@ -213,15 +193,15 @@ def _entropy(counts):
 
 def main():
     ap = argparse.ArgumentParser(
-        description='Bitstream feature extraction (supports controlled two-arm index)')
+        description='Bitstream feature extraction')
     ap.add_argument('--index', type=str, default=DEFAULT_INDEX,
-                    help='sample_index.csv 路径 (默认 data_expanded/sample_index.csv). '
-                         '受控双臂请用 data_controlled/sample_index.csv')
+                    help='path to sample_index.csv (default data_expanded/sample_index.csv). '
+                         'use data_controlled/sample_index.csv for the two-arm corpus')
     ap.add_argument('--output', type=str, default=DEFAULT_OUTPUT,
-                    help='输出特征 CSV 路径 (默认 bitstream_features_expanded.csv). '
-                         '受控双臂建议 results/bitstream_features_controlled.csv')
+                    help='output feature CSV (default bitstream_features_expanded.csv). '
+                         'results/bitstream_features_controlled.csv is used for the two-arm corpus')
     ap.add_argument('--max', type=int, default=None,
-                    help='最多处理 N 个样本 (试跑/调试用)')
+                    help='process at most N samples (for trial runs)')
     args = ap.parse_args()
 
     meta = list(csv.DictReader(open(args.index, 'r', encoding='utf-8')))
@@ -233,7 +213,7 @@ def main():
     print(f"Valid files: {len(valid)}")
     if args.max is not None:
         valid = valid[:args.max]
-        print(f"--max 限制: 处理前 {len(valid)} 个")
+        print(f"--max: processing the first {len(valid)} samples")
 
     numeric_keys = [
         'n_packets', 'pkt_size_mean', 'pkt_size_std', 'pkt_size_median',
@@ -262,14 +242,14 @@ def main():
               f"ETA={eta:.0f}s", flush=True)
 
         feats = extract_bitstream_features(vpath)
-        # ── meta 列原样透传 (供 eval_controlled.py 使用) ──
+        # meta columns pass through for eval_controlled.py
         feats['video_file'] = row.get('video_file', '')
         feats['label'] = row.get('label', '')
         feats['codec'] = row.get('codec', '')
-        feats['q1'] = row.get('q1', '')               # 受控双臂: 首压参数
-        feats['q2'] = row.get('q2', '')               # 受控双臂: 二次压参数
+        feats['q1'] = row.get('q1', '')               # two-arm corpus: first-pass parameter
+        feats['q2'] = row.get('q2', '')               # two-arm corpus: second-pass parameter
         feats['delta_qp'] = row.get('delta_qp', '')   # |q2 - q1|
-        feats['crf'] = row.get('crf', '')             # 旧 expanded index 兼容
+        feats['crf'] = row.get('crf', '')             # compatibility with the old expanded index
         feats['sample_path'] = vpath
         all_features.append(feats)
 
@@ -291,3 +271,6 @@ def _save_csv(features, numeric_keys, out_csv):
 
 if __name__ == '__main__':
     main()
+
+"""Extract bitstream-level features from the clips listed in an index CSV."""
+

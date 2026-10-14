@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Blind-GCRR 公共工具模块
-
-提供评估指标计算、CSV读写、置信区间等共享功能。
-"""
 
 import csv
 import os
@@ -13,7 +8,7 @@ from typing import List, Dict, Tuple
 
 
 def read_sample_index(csv_path: str) -> List[Dict]:
-    """读取样本索引CSV"""
+    """Read the sample index CSV."""
     samples = []
     with open(csv_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -23,7 +18,7 @@ def read_sample_index(csv_path: str) -> List[Dict]:
 
 
 def compute_metrics(y_true, y_pred, y_scores, threshold):
-    """计算分类指标"""
+    """Compute classification metrics."""
     tp = sum(1 for t, p in zip(y_true, y_pred) if t == 1 and p == 1)
     tn = sum(1 for t, p in zip(y_true, y_pred) if t == 0 and p == 0)
     fp = sum(1 for t, p in zip(y_true, y_pred) if t == 0 and p == 1)
@@ -46,13 +41,12 @@ def compute_metrics(y_true, y_pred, y_scores, threshold):
 
 def calibrate_threshold_youden(labels, scores):
     """
-    用 Youden's J statistic 标定最优阈值
-    J = TPR - FPR，最大化J得到最优阈值
+    Calibrate the threshold with Youden's J statistic (J = TPR - FPR).
     """
     scores_arr = np.array(scores)
     labels_arr = np.array(labels)
 
-    # 使用唯一分数作为候选阈值
+    # unique scores as candidate thresholds
     unique_scores = np.unique(scores_arr)
     if len(unique_scores) > 100:
         candidates = np.percentile(scores_arr, np.linspace(1, 99, 99))
@@ -84,7 +78,7 @@ def calibrate_threshold_youden(labels, scores):
 
 
 def bootstrap_ci(y_true, y_scores, threshold, metric='f1', n_bootstrap=1000, ci=0.95, seed=42):
-    """Bootstrap 95%置信区间"""
+    """Bootstrap 95% confidence interval."""
     n = len(y_true)
     y_true_arr = np.array(y_true)
     y_scores_arr = np.array(y_scores)
@@ -127,7 +121,7 @@ def bootstrap_ci(y_true, y_scores, threshold, metric='f1', n_bootstrap=1000, ci=
 
 
 def write_results_csv(csv_path, fieldnames, rows):
-    """写入结果CSV"""
+    """Write results to CSV."""
     with open(csv_path, 'w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
@@ -137,10 +131,10 @@ def write_results_csv(csv_path, fieldnames, rows):
 
 
 def format_summary(stage_name, metrics, ci_results, threshold, extra_info=None):
-    """格式化摘要文本"""
+    """Format a summary line."""
     lines = []
     lines.append("=" * 60)
-    lines.append(f"Blind-GCRR {stage_name} Summary")
+    lines.append(f"{stage_name} summary")
     lines.append("=" * 60)
     lines.append("")
     lines.append(f"Threshold (Youden's J): {threshold:.4f}")
@@ -159,3 +153,6 @@ def format_summary(stage_name, metrics, ci_results, threshold, extra_info=None):
         lines.append("")
 
     return '\n'.join(lines)
+
+"""Shared helpers: metrics, CSV IO, confidence intervals."""
+

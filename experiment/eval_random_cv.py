@@ -1,19 +1,5 @@
 #!/usr/env python3
 # -*- coding: utf-8 -*-
-"""
-Random (stratified, leakage-prone) CV — the "legacy" protocol demonstration.
-=====================================================================
-Reuses load_data / select_features / fit_predict / metrics from
-eval_controlled.py so the feature set and the threshold protocol are
-IDENTICAL to the source-aware run. The ONLY difference is that here we
-use StratifiedKFold (which IGNORES the source video), so the same raw
-source's single & double clips can land on opposite sides of the
-train/test split — i.e. the content-leakage artifact.
-
-Usage:
-  py eval_random_cv.py --features results/bitstream_features_controlled.csv --model xgb
-  py eval_random_cv.py --features results/bitstream_features_controlled.csv --model lr
-"""
 import os
 import sys
 import argparse
@@ -63,3 +49,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+"""Random stratified CV, kept as the leakage-prone baseline protocol."""
+

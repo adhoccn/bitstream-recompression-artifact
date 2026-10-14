@@ -1,15 +1,3 @@
-"""
-Bitstream-level feature extraction for video recompression detection.
-Uses pyav to extract codec-level features that are invisible in pixel domain.
-
-Features extracted:
-  - Frame size statistics (mean, std, CV, entropy)
-  - I/P/B frame type distribution
-  - GOP structure (key frame spacing)
-  - Codec context parameters (bitrate, profile, level)
-  - Temporal patterns (PTS delta statistics)
-  - Side data (motion vectors, QP if available)
-"""
 import av
 import os
 import csv
@@ -383,3 +371,6 @@ def _save_csv(features, numeric_keys):
 
 if __name__ == '__main__':
     main()
+
+"""Extract bitstream-level features that are invisible in the pixel domain."""
+

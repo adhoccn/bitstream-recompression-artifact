@@ -1,10 +1,3 @@
-"""
-Bitstream feature classifier evaluation.
-- 5-fold CV with LR and XGBoost
-- Exclude confounding features (duration, width, height)
-- Per-codec breakdown
-- Comparison with pixel-domain results
-"""
 import csv
 import numpy as np
 from sklearn.linear_model import LogisticRegression
@@ -283,3 +276,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+"""Classifier evaluation: 5-fold CV with LR and XGBoost, per-codec breakdown."""
+

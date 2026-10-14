@@ -1,20 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-120-clip 同语料对照：把 bitstream XGB 放在与像素基线【完全相同规模/选择】的
-120-clip 受控子集上，用与主表一致的 source-aware 协议评估。
-
-子集定义（显式、可复现，对应论文"one double variant per source-codec pair"）：
-  - 全部 single 片段（每 (video_file, codec) 1 个）-> 60
-  - delta_qp == 0 的 double 片段（同参数二次压缩，每 (video_file, codec) 1 个）-> 60
-  - 合计 120，1:1 平衡，与像素基线语料对齐。
-
-这样主表"bitstream 0.665 vs 像素 0.566 (+0.099)"在【同语料大小】下可比，
-堵住 review 指出的"跨语料对比"口子。
-
-用法：
-  python evaluate_subset_120.py
-"""
 import os
 import sys
 import numpy as np
@@ -57,3 +42,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+"""Evaluate a fixed 120-clip subset with the same source-aware protocol."""
+

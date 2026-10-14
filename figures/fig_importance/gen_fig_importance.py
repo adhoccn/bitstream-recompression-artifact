@@ -1,7 +1,3 @@
-"""
-Regenerate fig_scores.png and fig_importance.png at publication quality.
-IEEE conference standard: 300 DPI, fonts >= 9pt after scaling, colorblind-safe palette.
-"""
 import csv
 from pathlib import Path
 
@@ -34,14 +30,14 @@ matplotlib.rcParams.update({
 # ============================================================
 # Load data
 # ============================================================
-# 仓库自带特征表：figures/<name>/ -> 仓库根 -> experiment/
+# feature table: figures/<name>/ -> repo root -> experiment/
 _CSV = (Path(__file__).resolve().parent.parent.parent
         / 'experiment' / 'bitstream_features_controlled.csv')
 if not _CSV.exists():
     raise FileNotFoundError(
-        f'特征表不存在: {_CSV}\n'
-        '本仓库自带该 CSV；若缺失请从归档（Zenodo/DataPort DOI）取回，'
-        '或先跑 experiment/extract_bitstream_expanded.py 生成。')
+        f'feature table not found: {_CSV}\n'
+        'this repository ships it; if missing, regenerate it with '
+        'experiment/extract_bitstream_expanded.py.')
 CSV_PATH = str(_CSV)
 
 df = pd.read_csv(CSV_PATH)
@@ -190,3 +186,6 @@ print(f'[SAVED] {out2}')
 print('\n=== Summary ===')
 print(f'fig_scores.png:     {scores_single.mean():.3f} (single mean) vs {scores_double.mean():.3f} (double mean)')
 print(f'fig_importance.png: XGB top = {xgb_names[0]} ({xgb_vals[0]:.3f}), LR top = {lr_names[0]} ({lr_vals[0]:.3f})')
+
+"""Regenerate fig_importance.png from the bitstream feature table."""
+
