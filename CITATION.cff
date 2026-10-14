@@ -2,6 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "bitstream-recompression-artifact"
 abstract: >-
+  Artifact for "Blind Video Recompression Detection via Bitstream-Level
+  Encoding-Layer Features: A Controlled Protocol and a Negative Result".
   Bitstream-level (encoding-layer) feature extraction for MP4 files, plus a
   controlled two-arm protocol and the evaluation scripts that go with it.
   Both arms are encoded with the same codec and the same first-pass quality,
@@ -12,15 +14,25 @@ authors:
 version: 1.0.0
 date-released: "2026-10-14"
 license: MIT
-repository-code: "<fill in the repository URL after creating it>"
+repository-code: "https://github.com/adhoccn/bitstream-recompression-artifact"
 keywords:
   - video forensics
   - bitstream analysis
   - feature extraction
   - two-arm protocol
   - reproducibility
+  - negative result
 # Fill in after archiving to Zenodo or IEEE DataPort:
 # identifiers:
 #   - type: doi
 #     value: "10.XXXX/zenodo.XXXXXXX"
 #     description: "Archived artifact (code + feature table + figures)"
+# Fill in after the paper is accepted (preferred-citation needs a real venue):
+# preferred-citation:
+#   type: article
+#   title: "Blind Video Recompression Detection via Bitstream-Level
+#     Encoding-Layer Features: A Controlled Protocol and a Negative Result"
+#   authors:
+#     - family-names: "Dong"
+#       given-names: "Huasong"
+#   year: 2026

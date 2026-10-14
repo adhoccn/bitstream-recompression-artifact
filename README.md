@@ -1,10 +1,13 @@
 # bitstream-recompression-artifact
 
-Code and data for extracting bitstream-level (encoding-layer) features from
-MP4 files and evaluating them under a controlled two-arm protocol.
+Artifact for *Blind Video Recompression Detection via Bitstream-Level
+Encoding-Layer Features: A Controlled Protocol and a Negative Result*.
 
-Both arms are encoded with the same codec and the same first-pass quality, so
-the single versus double comparison is not confounded by codec identity.
+Code and data for extracting bitstream-level (encoding-layer) features from
+MP4 files and evaluating them under a controlled two-arm protocol. Both arms
+are encoded with the same codec and the same first-pass quality, so the single
+versus double comparison is not confounded by codec identity. The result is
+negative: AUC 0.665 +/- 0.012 under source-aware grouped cross-validation.
 
 ## Layout
 
