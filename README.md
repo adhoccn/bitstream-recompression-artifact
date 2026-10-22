@@ -55,6 +55,26 @@ All defaults are relative to the repository root. Override them with CLI flags
 (`--video-dir`, `--data-dir`, `--ffmpeg`) or with the environment variables
 `GCRR_VIDEO_DIR`, `GCRR_DATA_DIR`, `GCRR_FFMPEG`.
 
+## Part I theory artifacts
+
+This repository additionally archives the theory-verification code behind
+**Part I** of the companion series, *Signature Existence and Optimal
+Multi-Stage Fusion for Blind Video Recompression Detection*, under
+`part1_theory/`:
+
+    part1_theory/scripts/     theory validation scripts cited in Part I
+    part1_theory/data/        stored CSV/TXT outputs behind each table
+    part1_theory/figures/     one directory per figure: PNG + its generator
+    part1_theory/FIGURE_TABLE_MAP.md   which script draws which figure
+
+Every script prints the numbers it plots rather than only drawing them, so each
+quantity quoted in the manuscript can be checked from stdout. Figures were
+produced on Python 3.13 with matplotlib 3.10.9; reproduce with
+
+    python part1_theory/scripts/validate_signature.py
+    python part1_theory/scripts/measure_deblock_sigma.py
+    python part1_theory/scripts/make_figures.py
+
 ## License
 
 MIT, see `LICENSE`.
