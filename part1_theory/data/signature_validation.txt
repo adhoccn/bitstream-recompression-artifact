@@ -1,0 +1,50 @@
+==============================================================================
+Section IV validation: double-quantization periodicity
+==============================================================================
+
+[Lemma 1/2] closed-form masses vs Monte-Carlo
+  q1    q2    max| Lem1 err |   max| Lem2 err |
+  4     8      0.000436         0.000329      
+  4     12     0.000436         0.000463      
+  6     9      0.000527         0.000527      
+  8     12     0.000560         0.000560      
+  2     6      0.000388         0.000527      
+  verdict: PASS
+
+[Theorem 1 / Corollary 1] comb period and occupied fraction
+  q1    q2    g   Delta   period-match    occupied(frac)  theory g/q2
+  4     8     4   2       5.48e-01     0.0205          0.5000    FAIL
+  4     12    4   3       7.88e-01     0.0094          0.3333    FAIL
+  6     9     3   3       5.40e-01     0.0124          0.3333    FAIL
+  8     12    4   3       5.68e-01     0.0094          0.3333    FAIL
+  2     6     2   3       4.43e-01     0.0176          0.3333    FAIL
+  verdict: FAIL
+
+[Proposition 4] comb-replication identity and DFT peak scaling
+  Identity under test:  hat h(l) = hat w(l mod M),  w_m = h[m*b], L = M*b
+  q1    q2    g   Delta   max|hat h - rep|/N   P(h)    |hat h(M)|/N
+  4     8     4   2       0.00000000        3.5883   1.0000  
+  4     12    4   3       0.00000000        2.5385   1.0000  
+  6     9     3   3       0.00000000        3.1718   1.0000  
+  8     12    4   3       0.00000000        2.7615   1.0000  
+  2     6     2   3       0.00000000        4.5100   1.0000  
+  replication identity: PASS
+
+  Fundamental magnitude |hat h(omega_Delta)| / N versus Delta:
+     draft Claim (Prop 4 / Remark): Theta(1/Delta)
+       Delta = 2      measured = 1.0000     1/Delta = 0.5000  
+       Delta = 3      measured = 1.0000     1/Delta = 0.3333  
+       Delta = 3      measured = 1.0000     1/Delta = 0.3333  
+       Delta = 3      measured = 1.0000     1/Delta = 0.3333  
+       Delta = 3      measured = 1.0000     1/Delta = 0.3333  
+
+[DIAGNOSIS]
+  The fundamental does NOT decay as 1/Delta: it equals N to within a
+  few percent for every lattice tested.  Under the exact comb model
+  hat h(M) = hat w(0) = N, i.e. the comb replicates the DC term onto
+  the fundamental index, so the Theta(1/Delta) claim of Prop 4 and the
+  Theta(eps) claim of Prop 7 are NOT consequences of Theorem 1 alone.
+  The two statements require an additional assumption, stated in the
+  revised proofs: the comb must be read against a *within-bin*
+  reference, i.e. the idle-tone model below.
+==============================================================================

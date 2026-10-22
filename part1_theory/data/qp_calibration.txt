@@ -1,0 +1,37 @@
+measured CRF -> QP -> Qstep -> eps calibration (C2)
+  ffmpeg : ffmpeg-win-x86_64-v7.1.exe
+  method : ffmpeg -bsf:v trace_headers -> pic_init_qp_minus26 + slice_qp_delta
+           SliceQPY = 26 + pic_init_qp_minus26 + slice_qp_delta
+           Qstep(QP) = 0.625 * 2^(QP/6)   (H.264 Table 8-? / E.2.2)
+  seed 20261006 | 12 videos | 30 frames | 640x360 | CRF1 = 28
+
+    dCRF   n_frames   eps_nom    eps_mean   eps_med    eps_rms   rms/nom   P(eps<=0)   N*/N*_nom   QP1 mean   QP2 mean
+    --------------------------------------------------------------------------------------------------------------------
+       1        360    0.1225     0.0375    0.0000     0.1368     1.117      0.642       0.801      27.08      27.34
+       2        360    0.2599     0.1645    0.1225     0.2211     0.851      0.183       1.382      27.08      28.34
+       3        360    0.4142     0.3071    0.2599     0.3490     0.843      0.028       1.409      27.08      29.34
+       4        360    0.5874     0.4672    0.4142     0.5029     0.856      0.000       1.364      27.08      30.34
+       6        360    1.0000     0.8486    0.7818     0.8804     0.880      0.000       1.290      27.08      32.34
+
+Reading:
+  * eps_nom  = 2^(dCRF/6) - 1 : what a CRF-based reading of Theorem 6 assumes.
+  * eps_rms  : what Theorem 6 actually sees, because H^2 accumulates additively
+               over frames and H^2 ~ C eps^2 per frame, so the pooled barrier is
+               driven by E[eps^2], i.e. by eps_rms.
+  * N*/N*_nom = (eps_nom / eps_rms)^2 : distortion of the barrier.  A value of
+               0.44 means the CRF axis OVERSTATES the required sample size by 2.3x.
+  * P(eps<=0) : measured fraction of frame pairs on which the second step is NOT
+               larger than the first, i.e. the q2 > q1 branch of Theorem 1(iii)
+               does not hold frame-locally.  This is the regime question.
+  * QP1 / QP2 means are the measured rate-factor -> QP map, replacing the
+    modelled +-2 QP swing of the earlier calibrate_epsilon.py.
+
+Regime split (Theorem 1(iii)): measured, pooled over all dCRF > 0
+  frame pairs            : 1800
+  P(q2 >  q1)  [b>a]     : 0.829
+  P(q2 <= q1)  [b<a]     : 0.171
+  P(q2 == q1)  [degen]   : 0.128
+  Interpretation: under dCRF > 0 (recompression toward lower quality) the
+  majority branch is q2 > q1, so Theorem 1(iii) gives the TRIVIAL lattice
+  spacing with NO comb-with-gaps.  The forensically exploitable comb is the
+  minority branch, and it shrinks as dCRF grows.

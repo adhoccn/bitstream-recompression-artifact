@@ -1,0 +1,52 @@
+fusion-structure validation (seed 20261006)
+
+(A) Is a weighted log-sum still a likelihood-ratio test?
+    statistic                         AUC
+    true log-LR (equal weights)    0.8366
+    weights [1, 1, 1]              0.8366   cos^2=1.0000
+    weights [3, 1, 1]              0.8031   cos^2=0.7576
+    weights [1, 3, 1]              0.8031   cos^2=0.7576
+    weights [5, 1, 1]              0.7769   cos^2=0.6049
+    weights [10, 1, 1]             0.7491   cos^2=0.4706
+    -> equal weights reproduce the LRT; unequal weights do not,
+       and the deficit grows as the weight vector tilts away
+       from the all-ones direction. 'UMP' is therefore reserved
+       for the unweighted (correctly-scaled) statistic.
+
+(B) Mis-specification cost for a linear combination w'X
+    (Gaussian stages, common Sigma; I(w*) = 0.01447)
+     angle_deg  I(w) theory    I(w) meas        ratio      cos^2
+             0      0.01447      0.01449       1.0000     1.0000
+            15      0.01350      0.01359       0.9330     0.9330
+            30      0.01085      0.01069       0.7500     0.7500
+            45      0.00723      0.00723       0.5000     0.5000
+            60      0.00362      0.00362       0.2500     0.2500
+            75      0.00097      0.00099       0.0670     0.0670
+            90      0.00000      0.00000       0.0000     0.0000
+    -> the measured exponent equals I(w*) * cos^2_Sigma(w, w*)
+       to Monte Carlo accuracy: mis-specification costs exactly
+       the squared cosine of the misalignment angle.
+
+
+(C) Cascade (OR) versus log-sum fusion, K = 4 stages
+  -- dense alternative: every stage carries equal signal
+      dense  delta = 0.50 on all stages
+      rule                FPR      power
+      OR/cascade       0.1859     0.4180
+      log-sum          0.0500     0.2592
+      max              0.0500     0.1545
+      disagreement (H1): OR vs log-sum = 0.2514
+  -- sparse alternative: exactly ONE stage carries signal
+      sparse delta = 1.20 on one stage only
+      rule                FPR      power
+      OR/cascade       0.1852     0.4226
+      log-sum          0.0500     0.1482
+      max              0.0500     0.1824
+      disagreement (H1): OR vs log-sum = 0.3153
+
+    -> dense:  log-sum 0.2592 >= OR 0.4180  (log-sum wins, as Theorem 5 predicts)
+    -> sparse: max/OR 0.1824 >= log-sum 0.1482  (the ORDER flips)
+       i.e. under a sparse alternative the generalized LRT is
+       max_k Lambda_k, and the cascade is the correct rule.
+       The cascade is therefore an approximation to the LRT in
+       the dense regime and the exact GLR rule in the sparse one.

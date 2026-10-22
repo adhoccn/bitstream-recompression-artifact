@@ -1,0 +1,33 @@
+epsilon calibration: CRF -> QP -> Qstep -> eps   (seed 20261006, 400000 MC draws)
+
+H.264 step law      : Qstep(QP) = 0.625 * 2^(QP/6)
+x264 frame-type offs: dQP_I = -2.91  dQP_P = +0.00  dQP_B = +2.27
+AQ / MB-tree clamp  : +-2.0 QP (uniform model)
+
+    dCRF  eps_nominal     eps_mean      eps_rms      rms/nom    P(eps<=0)    N*/N*_nom eps_p05..p95
+---------------------------------------------------------------------------------------------------
+       1       0.1225       0.1647       0.3657        2.986        0.338        0.112  -0.284..+0.757
+       2       0.2599       0.3089       0.4801        1.847        0.205        0.293  -0.195..+0.976
+       3       0.4142       0.4692       0.6249        1.509        0.104        0.439  -0.098..+1.219
+       4       0.5874       0.6484       0.7971        1.357        0.047        0.543  +0.011..+1.491
+       6       1.0000       1.0794       1.2269        1.227        0.005        0.664  +0.279..+2.140
+
+Reading:
+  * eps_nominal is what a CRF-based reading of Theorem 6 would assume.
+  * eps_rms is what Theorem 6 actually sees after pooling frames, since
+    H^2 accumulates additively and H^2 ~ C eps^2 per frame.
+  * N*/N*_nom is the resulting distortion of the barrier: values far
+    from 1 mean the CRF axis cannot be substituted for the step axis.
+  * P(eps<=0) is the fraction of frame pairs for which the SECOND step
+    is not larger than the first, i.e. the q2>q1 regime of Theorem 1
+    does not hold frame-locally even when dCRF > 0.
+
+Worked example at dCRF = 3 (the empirical study's 'Delta CRF <= 3'):
+  Qstep ratio from CRF alone      : 2^(3/6) = 1.4142 -> eps = 0.4142
+    dQP_eff = -3  ->  q2/q1 = 0.7071  ->  eps = -0.2929
+    dQP_eff = +0  ->  q2/q1 = 1.0000  ->  eps = +0.0000
+    dQP_eff = +3  ->  q2/q1 = 1.4142  ->  eps = +0.4142
+    dQP_eff = +6  ->  q2/q1 = 2.0000  ->  eps = +1.0000
+    dQP_eff = +9  ->  q2/q1 = 2.8284  ->  eps = +1.8284
+  A frame-type/AQ swing of only +-3 QP therefore moves eps by more than
+  a factor of two at dCRF = 3, and a swing of -6 QP flips its sign.

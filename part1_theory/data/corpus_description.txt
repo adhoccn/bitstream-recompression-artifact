@@ -1,0 +1,12 @@
+source-pool description (corpus: C:\baidunetdiskdownload\lightweight\video)
+  pool size            : 1245 clips
+  probed sample        : 60 clips (seed 20261006), 60 usable
+  duration (s)         : min 121.5  p25 600.0  median 600.0  p75 600.2  max 720.1
+  frame width (px)     : min 1280  median 1920  max 4096
+  frame height (px)    : min 720  median 1080  max 2160
+  container video codec: h264 55, hevc 5
+
+LIMITATION: the 50 source videos actually used in the 198-sample
+run are not identifiable from the retained artifacts, so the above
+describes the pool, not the subset.  We state this rather than
+reconstruct per-source metadata we do not have.

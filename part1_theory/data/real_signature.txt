@@ -1,0 +1,27 @@
+lattice concentration rho on decoded AC coefficients (real corpus)
+  seed 20261006 | 16 clips | 20 frames | 640x360 | CRF1=28
+  rho = max_s |mean exp(2 pi i x / s)| ; rho = 1 == perfect lattice
+
+  condition      n_clips      rho mean      rho sd       rho max
+  --------------------------------------------------------------
+  single              16        0.7252      0.1010       0.9284
+  double +1           16        0.7261      0.1007       0.9286
+  double +2           16        0.7264      0.1007       0.9288
+  double +3           16        0.7264      0.1011       0.9290
+  double +4           16        0.7271      0.1011       0.9292
+  double +6           16        0.7282      0.1015       0.9297
+
+  paired difference (same clip, double - single):
+    +1           n=16  mean +0.0009  sd 0.0012  max|.| 0.0030
+    +2           n=16  mean +0.0012  sd 0.0018  max|.| 0.0052
+    +3           n=16  mean +0.0012  sd 0.0022  max|.| 0.0058
+    +4           n=16  mean +0.0019  sd 0.0028  max|.| 0.0087
+    +6           n=16  mean +0.0031  sd 0.0040  max|.| 0.0132
+
+  CAVEAT on the absolute level: rho is an UPPER bound on the compression
+  signature, because the 8-bit pixel grid also imposes a lattice, and that
+  lattice is common to both conditions.  The informative quantity is the
+  single-vs-double DIFFERENCE, and that is null: the largest difference
+  anywhere in the sweep is far below one between-clip sd (0.1010).
+
+  figure: figs/near_parameter_real.png

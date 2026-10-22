@@ -38,6 +38,12 @@ data_expanded/
 results/
 !experiment/bitstream_features_controlled.csv
 *.mp4
+
+# Part I theory archive: these CSV/TXT outputs ARE the results (every number
+# quoted in the manuscript is recomputed from them), not raw intermediates.
+# Re-include them despite the data/ rule above.
+!part1_theory/data/
+!part1_theory/data/*
 *.mov
 *.avi
 *.mkv

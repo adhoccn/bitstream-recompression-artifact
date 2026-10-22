@@ -1,0 +1,128 @@
+========================================================================================
+Validation of Theorem 1 (support / gap structure) and Corollary 1 (occupied fraction)
+seed = 20261005 ;  EXACT enumeration m in [-4000, 4000] ;  EMPIRICAL n = 1000000 Laplace draws
+========================================================================================
+
+q1=2,  q2=4   g=2 a=1 b=2   (b>a)
+----------------------------------------------------------------------------------------
+  Thm 1(ii)  reachability (half-open)  m*b-b/2 <= n*a < m*b+b/2 :  PASS
+  [draft form] symmetric strict dist(m*b, a*Z) < b/2 : equivalent (0 mismatches  <- b even, ties attained)
+  Thm 1(iii) candidate-use fraction  measured 1.0000  predicted 1.0000  (b>a)  PASS
+  Thm 1(iii) exactly 1 of each block of 1 candidates qualify : PASS
+  Thm 1(iii) occupancy-indicator period:  1 in m / 2 in k   PASS
+  Thm 1(i)   all empirical mass on k = 0 mod b : PASS  (off-lattice bins = 0, window |k|<=62)
+  cross-check  empirical occupancy == exact prediction over 63 candidates : PASS (0 mismatches)
+  Cor 1      occupied fraction  measured 0.5040  window-exact 0.5040  closed form 0.5000  PASS
+  Thm 1(iv)  h[k+Delta] != h[k] as values : max relative step 0.875  PASS
+
+q1=4,  q2=6   g=2 a=2 b=3   (b>a)
+----------------------------------------------------------------------------------------
+  Thm 1(ii)  reachability (half-open)  m*b-b/2 <= n*a < m*b+b/2 :  PASS
+  [draft form] symmetric strict dist(m*b, a*Z) < b/2 : equivalent (0 mismatches)
+  Thm 1(iii) candidate-use fraction  measured 1.0000  predicted 1.0000  (b>a)  PASS
+  Thm 1(iii) exactly 2 of each block of 2 candidates qualify : PASS
+  Thm 1(iii) occupancy-indicator period:  2 in m / 6 in k   PASS
+  Thm 1(i)   all empirical mass on k = 0 mod b : PASS  (off-lattice bins = 0, window |k|<=63)
+  cross-check  empirical occupancy == exact prediction over 43 candidates : PASS (0 mismatches)
+  Cor 1      occupied fraction  measured 0.3386  window-exact 0.3386  closed form 0.3333  PASS
+  Thm 1(iv)  h[k+Delta] != h[k] as values : max relative step 3.667  PASS
+
+q1=8,  q2=12  g=4 a=2 b=3   (b>a)
+----------------------------------------------------------------------------------------
+  Thm 1(ii)  reachability (half-open)  m*b-b/2 <= n*a < m*b+b/2 :  PASS
+  [draft form] symmetric strict dist(m*b, a*Z) < b/2 : equivalent (0 mismatches)
+  Thm 1(iii) candidate-use fraction  measured 1.0000  predicted 1.0000  (b>a)  PASS
+  Thm 1(iii) exactly 2 of each block of 2 candidates qualify : PASS
+  Thm 1(iii) occupancy-indicator period:  2 in m / 6 in k   PASS
+  Thm 1(i)   all empirical mass on k = 0 mod b : PASS  (off-lattice bins = 0, window |k|<=33)
+  cross-check  empirical occupancy == exact prediction over 23 candidates : PASS (0 mismatches)
+  Cor 1      occupied fraction  measured 0.3433  window-exact 0.3433  closed form 0.3333  PASS
+  Thm 1(iv)  h[k+Delta] != h[k] as values : max relative step 11.875  PASS
+
+q1=4,  q2=2   g=2 a=2 b=1   (b<a)
+----------------------------------------------------------------------------------------
+  Thm 1(ii)  reachability (half-open)  m*b-b/2 <= n*a < m*b+b/2 :  PASS
+  [draft form] symmetric strict dist(m*b, a*Z) < b/2 : equivalent (0 mismatches)
+  Thm 1(iii) candidate-use fraction  measured 0.5001  predicted 0.5000  (b<a)  PASS
+  Thm 1(iii) exactly 1 of each block of 2 candidates qualify : PASS
+  Thm 1(iii) occupancy-indicator period:  2 in m / 2 in k   PASS
+  Thm 1(i)   all empirical mass on k = 0 mod b : PASS  (off-lattice bins = 0, window |k|<=63)
+  cross-check  empirical occupancy == exact prediction over 127 candidates : PASS (0 mismatches)
+  Cor 1      occupied fraction  measured 0.4961  window-exact 0.4961  closed form 0.5000  PASS
+  Thm 1(iv)  h[k+Delta] != h[k] as values : max relative step 1.500  PASS
+
+q1=6,  q2=4   g=2 a=3 b=2   (b<a)
+----------------------------------------------------------------------------------------
+  Thm 1(ii)  reachability (half-open)  m*b-b/2 <= n*a < m*b+b/2 :  PASS
+  [draft form] symmetric strict dist(m*b, a*Z) < b/2 : WRONG (2667 mismatches  <- b even, ties attained)
+  Thm 1(iii) candidate-use fraction  measured 0.6667  predicted 0.6667  (b<a)  PASS
+  Thm 1(iii) exactly 2 of each block of 3 candidates qualify : PASS
+  Thm 1(iii) occupancy-indicator period:  3 in m / 6 in k   PASS
+  Thm 1(i)   all empirical mass on k = 0 mod b : PASS  (off-lattice bins = 0, window |k|<=64)
+  cross-check  empirical occupancy == exact prediction over 65 candidates : PASS (0 mismatches)
+  Cor 1      occupied fraction  measured 0.3333  window-exact 0.3333  closed form 0.3333  PASS
+  Thm 1(iv)  h[k+Delta] != h[k] as values : max relative step 1.625  PASS
+
+q1=12, q2=8   g=4 a=3 b=2   (b<a)
+----------------------------------------------------------------------------------------
+  Thm 1(ii)  reachability (half-open)  m*b-b/2 <= n*a < m*b+b/2 :  PASS
+  [draft form] symmetric strict dist(m*b, a*Z) < b/2 : WRONG (2667 mismatches  <- b even, ties attained)
+  Thm 1(iii) candidate-use fraction  measured 0.6667  predicted 0.6667  (b<a)  PASS
+  Thm 1(iii) exactly 2 of each block of 3 candidates qualify : PASS
+  Thm 1(iii) occupancy-indicator period:  3 in m / 6 in k   PASS
+  Thm 1(i)   all empirical mass on k = 0 mod b : PASS  (off-lattice bins = 0, window |k|<=34)
+  cross-check  empirical occupancy == exact prediction over 35 candidates : PASS (0 mismatches)
+  Cor 1      occupied fraction  measured 0.3333  window-exact 0.3333  closed form 0.3333  PASS
+  Thm 1(iv)  h[k+Delta] != h[k] as values : max relative step 3.250  PASS
+
+q1=8,  q2=6   g=2 a=4 b=3   (b<a)
+----------------------------------------------------------------------------------------
+  Thm 1(ii)  reachability (half-open)  m*b-b/2 <= n*a < m*b+b/2 :  PASS
+  [draft form] symmetric strict dist(m*b, a*Z) < b/2 : equivalent (0 mismatches)
+  Thm 1(iii) candidate-use fraction  measured 0.7500  predicted 0.7500  (b<a)  PASS
+  Thm 1(iii) exactly 3 of each block of 4 candidates qualify : PASS
+  Thm 1(iii) occupancy-indicator period:  4 in m / 12 in k   PASS
+  Thm 1(i)   all empirical mass on k = 0 mod b : PASS  (off-lattice bins = 0, window |k|<=66)
+  cross-check  empirical occupancy == exact prediction over 45 candidates : PASS (0 mismatches)
+  Cor 1      occupied fraction  measured 0.2481  window-exact 0.2481  closed form 0.2500  PASS
+  Thm 1(iv)  h[k+Delta] != h[k] as values : max relative step 2.000  PASS
+
+q1=9,  q2=6   g=3 a=3 b=2   (b<a)
+----------------------------------------------------------------------------------------
+  Thm 1(ii)  reachability (half-open)  m*b-b/2 <= n*a < m*b+b/2 :  PASS
+  [draft form] symmetric strict dist(m*b, a*Z) < b/2 : WRONG (2667 mismatches  <- b even, ties attained)
+  Thm 1(iii) candidate-use fraction  measured 0.6667  predicted 0.6667  (b<a)  PASS
+  Thm 1(iii) exactly 2 of each block of 3 candidates qualify : PASS
+  Thm 1(iii) occupancy-indicator period:  3 in m / 6 in k   PASS
+  Thm 1(i)   all empirical mass on k = 0 mod b : PASS  (off-lattice bins = 0, window |k|<=42)
+  cross-check  empirical occupancy == exact prediction over 43 candidates : PASS (0 mismatches)
+  Cor 1      occupied fraction  measured 0.3412  window-exact 0.3412  closed form 0.3333  PASS
+  Thm 1(iv)  h[k+Delta] != h[k] as values : max relative step 2.222  PASS
+
+q1=5,  q2=3   g=1 a=5 b=3   (b<a)
+----------------------------------------------------------------------------------------
+  Thm 1(ii)  reachability (half-open)  m*b-b/2 <= n*a < m*b+b/2 :  PASS
+  [draft form] symmetric strict dist(m*b, a*Z) < b/2 : equivalent (0 mismatches)
+  Thm 1(iii) candidate-use fraction  measured 0.6000  predicted 0.6000  (b<a)  PASS
+  Thm 1(iii) exactly 3 of each block of 5 candidates qualify : PASS
+  Thm 1(iii) occupancy-indicator period:  5 in m / 15 in k   PASS
+  Thm 1(i)   all empirical mass on k = 0 mod b : PASS  (off-lattice bins = 0, window |k|<=126)
+  cross-check  empirical occupancy == exact prediction over 85 candidates : PASS (0 mismatches)
+  Cor 1      occupied fraction  measured 0.2016  window-exact 0.2016  closed form 0.2000  PASS
+  Thm 1(iv)  h[k+Delta] != h[k] as values : max relative step 1.800  PASS
+
+q1=3,  q2=5   g=1 a=3 b=5   (b>a)
+----------------------------------------------------------------------------------------
+  Thm 1(ii)  reachability (half-open)  m*b-b/2 <= n*a < m*b+b/2 :  PASS
+  [draft form] symmetric strict dist(m*b, a*Z) < b/2 : equivalent (0 mismatches)
+  Thm 1(iii) candidate-use fraction  measured 1.0000  predicted 1.0000  (b>a)  PASS
+  Thm 1(iii) exactly 3 of each block of 3 candidates qualify : PASS
+  Thm 1(iii) occupancy-indicator period:  3 in m / 15 in k   PASS
+  Thm 1(i)   all empirical mass on k = 0 mod b : PASS  (off-lattice bins = 0, window |k|<=125)
+  cross-check  empirical occupancy == exact prediction over 51 candidates : PASS (0 mismatches)
+  Cor 1      occupied fraction  measured 0.2032  window-exact 0.2032  closed form 0.2000  PASS
+  Thm 1(iv)  h[k+Delta] != h[k] as values : max relative step 2.374  PASS
+
+========================================================================================
+TOTAL FAILURES: 0
+========================================================================================

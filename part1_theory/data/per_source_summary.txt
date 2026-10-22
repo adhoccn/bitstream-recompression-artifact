@@ -1,0 +1,17 @@
+Per-source metadata, the exact 50 clips entering the pixel-domain evaluation
+source list: data/pixel_domain_rerun.csv column 'source'; probed from C:\baidunetdiskdownload\lightweight\video
+
+n sources                 : 50
+duration  (s)             : median 600, min 150, max 720
+frame area (px)           : median 2073600, min 921600, max 2073600
+distinct resolutions      : 9
+  <=1280x720              : 1
+  1388-1920 wide          : 49
+bitrate   (kb/s)          : median 2096, min 636, max 5072
+fps values                : 24, 25, 25.03, 30
+container codec h264        : 43
+container codec hevc        : 7
+
+NOTE: these replace the earlier pool proxy (60 of 1,245 clips). The pool proxy
+reported a 4096-px upper width that none of the evaluated 50 reaches, and a
+lower HEVC share than the evaluated set actually has.
