@@ -75,6 +75,15 @@ produced on Python 3.13 with matplotlib 3.10.9; reproduce with
     python part1_theory/scripts/measure_deblock_sigma.py
     python part1_theory/scripts/make_figures.py
 
+The minimum detectable effect quoted for the pixel-domain audit in Part II
+Sec. XI is recomputed from the archived per-sample scores, with no media:
+
+    python part1_theory/scripts/mde_rerun.py
+
+It prints the independence floor (MDE AUC 0.6324, SE 0.04726) and the
+clip-bootstrap MDE per stage (0.52 for the nearly clip-constant Stage 1,
+0.57--0.58 for Stages 3--5, seed 20261102).
+
 ## License
 
 MIT, see `LICENSE`.
