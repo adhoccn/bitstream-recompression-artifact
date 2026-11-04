@@ -32,7 +32,7 @@ ax1.plot(x, p1, color=BLUE, lw=2.0, label=r'$P_{\mathrm{single}}$')
 ax1.plot(x, p2, color=RED, lw=2.0, label=r'$P_{\mathrm{double}}$')
 tau = 1.2
 ax1.axvline(tau, color=GREY, ls='--', lw=1.0)
-ax1.text(tau + 0.12, 0.86, r'$\tau^\star$', fontsize=8.5, color=GREY)
+ax1.text(tau + 0.14, 0.06, r'$\tau^\star$', fontsize=8.5, color=GREY)
 ax1.fill_between(x, p2, where=(x > tau), color=RED, alpha=0.08)
 ax1.fill_between(x, p1, where=(x < tau), color=BLUE, alpha=0.08)
 ax1.set_title('(a) Detection: single vs. double recompression', fontsize=9)
@@ -59,10 +59,10 @@ ax2.set_ylabel('density')
 ax2.set_yticks([])
 ax2.set_xlim(-2, 9)
 ax2.legend(loc='upper right', frameon=False, fontsize=7.5)
-ax2.text(0.03, 0.93, r'indistinguishable:  $\mathrm{TV}\to 0$  as  $\varepsilon\to 0$',
+ax2.text(0.03, 0.93, r'indistinguishable:  $\mathrm{TV}\to 0$  as  $\delta\to 0$',
          transform=ax2.transAxes, fontsize=7.3, va='top',
          bbox=dict(boxstyle='round', fc='#fdeeee', ec='#e0a0a0', lw=0.6))
-ax2.text(0.03, 0.66, r'$N^\star=\Omega(\varepsilon^{-2})$  samples required',
+ax2.text(0.03, 0.66, r'$N^\star=\Omega(\delta^{-2})$  samples required',
          transform=ax2.transAxes, fontsize=7.3, va='top',
          bbox=dict(boxstyle='round', fc='#fdeeee', ec='#e0a0a0', lw=0.6))
 
