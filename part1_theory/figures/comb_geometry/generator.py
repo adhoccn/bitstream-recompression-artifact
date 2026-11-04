@@ -1,3 +1,5 @@
+import os
+
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -142,5 +144,6 @@ plt.tight_layout(pad=0.3)
 # axes region down restores breathing room above each panel and re-centres the
 # content vertically.
 fig.subplots_adjust(top=0.90)
+os.makedirs('figs', exist_ok=True)
 plt.savefig('figs/comb_geometry.png', bbox_inches='tight', pad_inches=0.04)
 print('saved figs/comb_geometry.png')

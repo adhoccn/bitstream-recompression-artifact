@@ -1,3 +1,5 @@
+import os
+
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -65,5 +67,6 @@ ax2.text(0.03, 0.66, r'$N^\star=\Omega(\varepsilon^{-2})$  samples required',
          bbox=dict(boxstyle='round', fc='#fdeeee', ec='#e0a0a0', lw=0.6))
 
 plt.tight_layout()
+os.makedirs('figs', exist_ok=True)
 plt.savefig('figs/detect_vs_attribute.png', bbox_inches='tight', pad_inches=0.05)
 print('saved figs/detect_vs_attribute.png')
