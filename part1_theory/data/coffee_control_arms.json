@@ -1,0 +1,227 @@
+{
+ "full": {
+  "_meta": {
+   "subset": "full",
+   "clips": 100,
+   "sources": 20,
+   "label_balance": {
+    "0": 20,
+    "1": 80
+   },
+   "seeds": 10,
+   "protocol": "StratifiedGroupKFold(5,shuffle)x seeds 0..N-1, groups=source; XGB(100,d3,lr0.1,rs42); TDR@FPR<=0.05 train-fold threshold; CI=1.96*sd/sqrt(n_folds)",
+   "feature_source": "CoFFEE (Bertazzini et al. 2024), 72125-D Sec.5.1 vector",
+   "in_house_arm": "absent by design"
+  },
+  "B_coffee_full": {
+   "auc": [
+    0.89296875,
+    0.017184145695415005
+   ],
+   "eer": [
+    0.176875,
+    0.02839305835058985
+   ],
+   "tdr05": [
+    0.7425,
+    0.02973294805430501
+   ],
+   "n_folds": 50
+  },
+  "C_coffee_dct": {
+   "auc": [
+    0.88640625,
+    0.018854705998271357
+   ],
+   "eer": [
+    0.2,
+    0.028307839020313787
+   ],
+   "tdr05": [
+    0.725,
+    0.02750118179278847
+   ],
+   "n_folds": 50
+  },
+  "D_coffee_mb": {
+   "auc": [
+    0.5675,
+    0.020837426439582217
+   ],
+   "eer": [
+    0.466875,
+    0.02967485067359228
+   ],
+   "tdr05": [
+    0.80375,
+    0.04776054909650851
+   ],
+   "n_folds": 50
+  },
+  "E_coffee_qp": {
+   "auc": [
+    0.88671875,
+    0.017047152552735895
+   ],
+   "eer": [
+    0.190625,
+    0.024819479496959642
+   ],
+   "tdr05": [
+    0.83375,
+    0.02096432803597578
+   ],
+   "n_folds": 50
+  }
+ },
+ "delta0": {
+  "_meta": {
+   "subset": "delta0",
+   "clips": 40,
+   "sources": 20,
+   "label_balance": {
+    "0": 20,
+    "1": 20
+   },
+   "seeds": 10,
+   "protocol": "StratifiedGroupKFold(5,shuffle)x seeds 0..N-1, groups=source; XGB(100,d3,lr0.1,rs42); TDR@FPR<=0.05 train-fold threshold; CI=1.96*sd/sqrt(n_folds)",
+   "feature_source": "CoFFEE (Bertazzini et al. 2024), 72125-D Sec.5.1 vector",
+   "in_house_arm": "absent by design"
+  },
+  "B_coffee_full": {
+   "auc": [
+    0.7375,
+    0.03550387302816413
+   ],
+   "eer": [
+    0.285,
+    0.04701957890070901
+   ],
+   "tdr05": [
+    0.135,
+    0.050372381321513865
+   ],
+   "n_folds": 50
+  },
+  "C_coffee_dct": {
+   "auc": [
+    0.744375,
+    0.034110916324543376
+   ],
+   "eer": [
+    0.29,
+    0.047729118994592805
+   ],
+   "tdr05": [
+    0.135,
+    0.04842826447437487
+   ],
+   "n_folds": 50
+  },
+  "D_coffee_mb": {
+   "auc": [
+    0.486875,
+    0.015012123850408376
+   ],
+   "eer": [
+    0.51,
+    0.011678047782056725
+   ],
+   "tdr05": [
+    0.44,
+    0.0778591343388815
+   ],
+   "n_folds": 50
+  },
+  "E_coffee_qp": {
+   "auc": [
+    0.68875,
+    0.031753739149901705
+   ],
+   "eer": [
+    0.4075,
+    0.04317008454937284
+   ],
+   "tdr05": [
+    0.405,
+    0.07051915484462358
+   ],
+   "n_folds": 50
+  }
+ },
+ "delta3": {
+  "_meta": {
+   "subset": "delta3",
+   "clips": 40,
+   "sources": 20,
+   "label_balance": {
+    "0": 20,
+    "1": 20
+   },
+   "seeds": 10,
+   "protocol": "StratifiedGroupKFold(5,shuffle)x seeds 0..N-1, groups=source; XGB(100,d3,lr0.1,rs42); TDR@FPR<=0.05 train-fold threshold; CI=1.96*sd/sqrt(n_folds)",
+   "feature_source": "CoFFEE (Bertazzini et al. 2024), 72125-D Sec.5.1 vector",
+   "in_house_arm": "absent by design"
+  },
+  "B_coffee_full": {
+   "auc": [
+    0.9,
+    0.03250292294548292
+   ],
+   "eer": [
+    0.1,
+    0.03250292294548292
+   ],
+   "tdr05": [
+    0.91,
+    0.04752747415968999
+   ],
+   "n_folds": 50
+  },
+  "C_coffee_dct": {
+   "auc": [
+    0.9,
+    0.03250292294548292
+   ],
+   "eer": [
+    0.1,
+    0.03250292294548292
+   ],
+   "tdr05": [
+    0.91,
+    0.04752747415968999
+   ],
+   "n_folds": 50
+  },
+  "D_coffee_mb": {
+   "auc": [
+    0.574375,
+    0.03340860461767297
+   ],
+   "eer": [
+    0.4475,
+    0.03737514949802877
+   ],
+   "tdr05": [
+    0.435,
+    0.0717611649849694
+   ],
+   "n_folds": 50
+  },
+  "E_coffee_qp": {
+   "auc": [
+    0.9425,
+    0.02320138357943336
+   ],
+   "eer": [
+    0.0575,
+    0.02320138357943336
+   ],
+   "tdr05": [
+    0.89,
+    0.044176156464771806
+   ],
+   "n_folds": 50
+  }
+ }
+}

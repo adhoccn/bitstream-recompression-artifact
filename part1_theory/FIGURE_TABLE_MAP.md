@@ -25,3 +25,21 @@ python scripts/make_figures.py              # all simulation figures
 
 Each script prints the numeric values it plots (rather than only drawing
 them), so every quoted figure in the manuscript can be checked from stdout.
+
+## Part II: coded-layer contrast (Supplement S3, Table S2)
+
+| result | script | statement |
+|---|---|---|
+| Table S2 (all four arms, three subsets) | `scripts/coffee_control.py` | Part II, Suppl. S3-C |
+
+```
+python scripts/coffee_control.py --subset full     # 0.8930 / 0.8864 / 0.5675 / 0.8867
+python scripts/coffee_control.py --subset delta0   # same-parameter recompression
+python scripts/coffee_control.py --subset delta3   # near-parameter (q2 = q1 - 3)
+```
+
+Feature vectors come from CoFFEE (Bertazzini et al., EURASIP J. Inf. Secur.
+2024) and are not redistributed; see the script's `Data` note. Archived
+aggregates are in `data/coffee_control_arms.json`. The arm set contains no
+in-house feature extractor, so the numbers do not depend on any other
+manuscript's pipeline.
