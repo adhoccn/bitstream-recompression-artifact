@@ -213,14 +213,21 @@ def stage2(frames):
     L = 2048
     idx = np.clip(np.floor((ac + lim) / (2 * lim) * L).astype(np.int64), 0, L - 1)
     h = np.bincount(idx, minlength=L).astype(np.float64)
-    H = np.abs(np.fft.rfft(h - h.mean()))
-    if H[0] <= 0:
+    # DC reference for R_Delta is the total coefficient count. It MUST be taken
+    # from h itself, not from the zero-frequency bin of the detrended spectrum:
+    # rfft(h - h.mean())[0] is sum(h - mean(h)) = 0 up to floating-point noise,
+    # so using it as a denominator made the ratio either undefined (0) or a
+    # magnitude of 1e11 set by rounding error. Detrending is kept for peak
+    # detection only.
+    dc = float(h.sum())
+    if dc <= 0:
         return 0.0
+    H = np.abs(np.fft.rfft(h - h.mean()))
     best = 0.0
     for d in range(2, 9):
         j = L // d
         if 0 < j < H.size:
-            best = max(best, float(H[j] / H[0]))
+            best = max(best, float(H[j] / dc))
     return best
 
 

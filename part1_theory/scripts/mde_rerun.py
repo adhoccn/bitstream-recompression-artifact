@@ -24,8 +24,10 @@ Two variances matter and they are different:
 MDE: bisection on the shift delta added to the 3 H1 rows of every clip until
 the clip-bootstrap rejection rate at the two-sided 5% level reaches 0.80;
 report delta and the corresponding population AUC, AUC(delta) = P(S0 < S1+delta)
-evaluated on the full observed sample.  Stage 2 excluded: rerun scores are
-identically zero (degenerate).
+evaluated on the full observed sample.  Stage 2 is included: an earlier
+implementation of the periodicity statistic normalised by an identically zero
+DC bin and returned a constant on every input; the corrected statistic varies
+and is retained in the audit.
 """
 from __future__ import annotations
 
@@ -62,7 +64,7 @@ ALPHA_POWER = 0.80
 B_SE = 4000
 B_POWER = 2000
 SEED = 20261102
-STAGES = ["S1", "S3", "S4", "S_fused"]  # S2 excluded: identically zero
+STAGES = ["S1", "S2", "S3", "S4", "S_fused"]
 LABELS = np.tile([0, 1, 1, 1], 50)      # row 0 of each clip is H0
 
 
